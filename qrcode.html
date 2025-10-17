@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扫码访问生日APP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 30px; }
+        .qr-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .qr-code {
+            margin: 20px 0;
+        }
+        .url-list {
+            margin-top: 30px;
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+        }
+        .url-item {
+            margin: 15px 0;
+            font-size: 18px;
+            font-family: monospace;
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .tip {
+            margin-top: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <h1>🎂 扫码访问生日APP 🎂</h1>
+    
+    <div class="qr-container">
+        <h2 style="color: #333;">用手机扫描下方任意二维码</h2>
+        
+        <div id="qr1" class="qr-code"></div>
+        <p style="color: #666;">http://192.168.195.88:9000</p>
+        
+        <div id="qr2" class="qr-code"></div>
+        <p style="color: #666;">http://192.168.227.1:9000</p>
+        
+        <div id="qr3" class="qr-code"></div>
+        <p style="color: #666;">http://192.168.192.1:9000</p>
+        
+        <div id="qr4" class="qr-code"></div>
+        <p style="color: #666;">http://adc:9000</p>
+    </div>
+    
+    <div class="url-list">
+        <h3>📱 或者手动输入以下任意地址：</h3>
+        <div class="url-item">http://192.168.195.88:9000</div>
+        <div class="url-item">http://192.168.227.1:9000</div>
+        <div class="url-item">http://192.168.192.1:9000</div>
+        <div class="url-item">http://adc:9000</div>
+    </div>
+    
+    <p class="tip">💡 确保手机和电脑连接同一个WiFi</p>
+
+    <script>
+        new QRCode(document.getElementById("qr1"), {
+            text: "http://192.168.195.88:9000",
+            width: 200,
+            height: 200
+        });
+        new QRCode(document.getElementById("qr2"), {
+            text: "http://192.168.227.1:9000",
+            width: 200,
+            height: 200
+        });
+        new QRCode(document.getElementById("qr3"), {
+            text: "http://192.168.192.1:9000",
+            width: 200,
+            height: 200
+        });
+        new QRCode(document.getElementById("qr4"), {
+            text: "http://adc:9000",
+            width: 200,
+            height: 200
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+

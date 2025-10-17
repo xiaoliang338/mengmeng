@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta name="description" content="一个特别为你准备的生日祝福">
+        <meta name="theme-color" content="#f093fb">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="生日快乐">
+        <title>💖 Happy Birthday My Love 💖</title>
+        
+        <!-- PWA配置 -->
+        <link rel="manifest" href="manifest.json">
+        <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+        <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
+        
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+
+    <body>
+        <!-- 密码保护页面 -->
+        <div id="password-page" class="password-page">
+            <div class="password-container">
+                <div class="password-icon">🔒</div>
+                <h1 class="password-title">这是一份专属的生日礼物</h1>
+                <p class="password-hint">请输入密码解锁</p>
+                <div class="password-input-group">
+                    <input type="password" id="password-input" class="password-input" placeholder="请输入密码" autocomplete="off">
+                    <button class="password-btn" onclick="checkPassword()">解锁</button>
+                </div>
+                <div id="password-error" class="password-error"></div>
+                <div class="password-footer">💕</div>
+            </div>
+        </div>
+
+        <div id="app" style="display: none;">
+            <!-- 第一页：开场封面 -->
+            <div class="cover" :class="{hide: !showCover}" @click="goToFireworks">
+                <div class="cover-content">
+                    <h1 class="animate-text">🎂</h1>
+                    <h2 class="animate-text">给最爱的你</h2>
+                    <p class="subtitle animate-text">点击任意位置开启惊喜</p>
+                    <div class="hearts">
+                        <span class="heart" v-for="i in 20" :key="i"
+                            :style="{left: Math.random()*100 + '%', animationDelay: Math.random()*2 + 's'}">💖</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二页：烟花页面 -->
+            <div class="fireworks-page" :class="{show: showFireworksPage}" @click="explodeConfetti">
+                <div class="fireworks-content">
+                    <div class="confetti-container">
+                        <div class="confetti-left" :class="{explode: confettiExploded}">🎉</div>
+                        <h1 class="fireworks-title">Happy Birthday</h1>
+                        <div class="confetti-right" :class="{explode: confettiExploded}">🎉</div>
+                    </div>
+                    <p class="fireworks-subtitle">点击任意位置</p>
+                </div>
+            </div>
+
+            <!-- 第三页：主内容 -->
+            <div class="main-content" v-show="showMainContent">
+                <!-- 气球装饰 -->
+                <div class="balloons">
+                    <div class="balloon balloon-1">🎈</div>
+                    <div class="balloon balloon-2">🎈</div>
+                    <div class="balloon balloon-3">🎈</div>
+                    <div class="balloon balloon-4">🎈</div>
+                    <div class="balloon balloon-5">🎈</div>
+                </div>
+
+                <!-- 第一部分：生日祝福 -->
+                <section class="birthday-wish">
+                    <h1 class="title fade-in">🎉 Happy Birthday 🎉</h1>
+                    <h2 class="subtitle fade-in">致我最爱的宝贝</h2>
+                    <div class="wish-card fade-in">
+                        <p class="wish-text">
+                            亲爱的宝贝，<br><br>
+                            今天是你的生日，<br>
+                            感谢上天让我遇见了你，<br>
+                            你的笑容是我最美的风景，<br>
+                            你的快乐是我最大的心愿。<br><br>
+                            愿你今后的每一天都充满阳光，<br>
+                            愿所有的美好都与你环环相扣。<br><br>
+                            生日快乐，我的爱人！💕
+                        </p>
+                    </div>
+                </section>
+
+                <!-- 第二部分：倒计时 -->
+                <section class="countdown-section">
+                    <h2 class="section-title">⏰ 我们在一起的时光 ⏰</h2>
+                    <div class="countdown">
+                        <div class="time-box">
+                            <div class="time-number">{{timeTogether.days}}</div>
+                            <div class="time-label">天</div>
+                        </div>
+                        <div class="time-box">
+                            <div class="time-number">{{timeTogether.hours}}</div>
+                            <div class="time-label">小时</div>
+                        </div>
+                        <div class="time-box">
+                            <div class="time-number">{{timeTogether.minutes}}</div>
+                            <div class="time-label">分钟</div>
+                        </div>
+                        <div class="time-box">
+                            <div class="time-number">{{timeTogether.seconds}}</div>
+                            <div class="time-label">秒</div>
+                        </div>
+                    </div>
+                    <p class="love-quote">"与你共度的每一秒，都是我最珍贵的回忆"</p>
+                </section>
+
+                <!-- 第三部分：回忆照片墙 -->
+                <section class="memory-section">
+                    <h2 class="section-title">📸 我们的回忆 📸</h2>
+                    <div class="photo-grid">
+                        <div class="photo-card" v-for="(memory, index) in memories" :key="index">
+                            <div class="photo-placeholder">
+                                <img :src="memory.image" :alt="memory.caption" class="photo-img">
+                            </div>
+                            <p class="photo-caption">{{memory.caption}}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 第四部分：我爱你的理由 -->
+                <section class="reasons-section">
+                    <h2 class="section-title">💝 我爱你的N个理由 💝</h2>
+                    <div class="reasons-grid">
+                        <div class="reason-card" v-for="(reason, index) in displayedReasons" :key="index">
+                            <span class="reason-number">{{index + 1}}</span>
+                            <span class="reason-text">{{reason}}</span>
+                        </div>
+                    </div>
+                    <button class="btn-more" @click="showMoreReasons" v-if="displayedReasons.length < reasons.length">
+                        查看更多 💕
+                    </button>
+                </section>
+
+                <!-- 第五部分：生日愿望 -->
+                <section class="wishes-section">
+                    <h2 class="section-title">🎂 我的生日愿望 🎂</h2>
+                    <div class="cake-container">
+                        <div class="cake">🎂</div>
+                        <div class="candles">
+                            <div class="candle" v-for="i in candles" :key="i">
+                                <div class="flame" :class="{blown: candlesBlown}"></div>
+                                <div class="wick"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="wish-instruction" v-if="!candlesBlown">点击蜡烛许愿吧 🌟</p>
+                    <p class="wish-made" v-else>愿望已经收到啦！💫</p>
+                    <button class="btn-blow" @click="blowCandles" v-if="!candlesBlown">
+                        吹蜡烛 🌬️
+                    </button>
+                </section>
+
+                <!-- 第六部分：爱的留言 -->
+                <section class="message-section">
+                    <h2 class="section-title">💌 给你的话 💌</h2>
+                    <div class="message-box">
+                        <p class="final-message">
+                            亲爱的，<br><br>
+                            谢谢你一直以来的陪伴，<br>
+                            谢谢你给我的温暖和爱，<br>
+                            谢谢你让我成为更好的自己。<br><br>
+                            未来的日子里，<br>
+                            我会继续陪在你身边，<br>
+                            无论风雨，无论晴天。<br><br>
+                            生日快乐，我的宝贝！<br>
+                            我会永远爱你！<br><br>
+                            <span class="signature">—— 永远爱你的那个人 💕</span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- 烟花效果 -->
+                <canvas id="fireworks"></canvas>
+            </div>
+
+            <!-- 音乐控制 -->
+            <div class="music-control" @click="toggleMusic">
+                <span v-if="musicPlaying">🎵</span>
+                <span v-else>🔇</span>
+            </div>
+
+            <!-- 返回按钮 -->
+            <div class="back-control" @click="resetToStart" v-show="showMainContent">
+                <span>🔄</span>
+            </div>
+        </div>
+
+        <!-- 背景音乐 - 生日快乐歌（海底捞版） -->
+        <audio id="bgMusic" loop preload="auto">
+            <source src="birthday.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- 密码验证脚本 -->
+        <script>
+            // 设置你的密码（可以随意修改）
+            const correctPassword = "meng991006";
+            
+            function checkPassword() {
+                const input = document.getElementById('password-input');
+                const errorDiv = document.getElementById('password-error');
+                const passwordPage = document.getElementById('password-page');
+                const app = document.getElementById('app');
+                
+                if (input.value === correctPassword) {
+                    // 密码正确
+                    passwordPage.style.opacity = '0';
+                    setTimeout(() => {
+                        passwordPage.style.display = 'none';
+                        app.style.display = 'block';
+                    }, 500);
+                } else {
+                    // 密码错误
+                    errorDiv.textContent = '❌ 密码错误，请重试';
+                    errorDiv.style.display = 'block';
+                    input.value = '';
+                    input.focus();
+                    
+                    // 输入框抖动效果
+                    input.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        input.style.animation = '';
+                    }, 500);
+                }
+            }
+            
+            // 支持回车键提交
+            document.addEventListener('DOMContentLoaded', () => {
+                const input = document.getElementById('password-input');
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+                
+                // 自动聚焦输入框
+                input.focus();
+            });
+        </script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+        <script src="js/app.js"></script>
+        
+        <!-- Service Worker 已禁用用于测试 -->
+    </body>
+
+</html>
+

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成APP图标</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        h1 { margin-bottom: 30px; }
+        #canvas { display: none; }
+        .btn {
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .status {
+            margin-top: 30px;
+            font-size: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            display: inline-block;
+        }
+        .preview {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .preview img {
+            border: 3px solid white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>🎂 生日APP图标生成器 🎂</h1>
+    <p>点击下面的按钮，自动生成所有尺寸的APP图标</p>
+    
+    <button class="btn" onclick="generateAllIcons()">🎨 生成所有图标</button>
+    
+    <div id="status" class="status" style="display:none;"></div>
+    <div id="preview" class="preview"></div>
+    
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function generateIcon(size) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = size;
+            canvas.height = size;
+            
+            // 绘制渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#f093fb');
+            gradient.addColorStop(1, '#f5576c');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // 绘制圆角矩形
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            const radius = size * 0.15;
+            const padding = size * 0.1;
+            roundRect(ctx, padding, padding, size - padding * 2, size - padding * 2, radius);
+            
+            // 绘制蛋糕emoji
+            ctx.font = `${size * 0.5}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🎂', size / 2, size / 2);
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        async function generateAllIcons() {
+            const statusDiv = document.getElementById('status');
+            const previewDiv = document.getElementById('preview');
+            
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '⏳ 正在生成图标...';
+            previewDiv.innerHTML = '';
+            
+            let count = 0;
+            
+            for (const size of sizes) {
+                const dataUrl = generateIcon(size);
+                
+                // 创建下载链接
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.href = dataUrl;
+                link.click();
+                
+                // 创建预览
+                const img = document.createElement('img');
+                img.src = dataUrl;
+                img.width = 80;
+                img.height = 80;
+                img.title = `${size}x${size}`;
+                previewDiv.appendChild(img);
+                
+                count++;
+                statusDiv.innerHTML = `✅ 已生成 ${count}/${sizes.length} 个图标`;
+                
+                // 延迟一下，避免浏览器阻止多个下载
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+            
+            statusDiv.innerHTML = `🎉 完成！已生成 ${count} 个图标<br><br>📁 请将下载的图标文件移动到 <strong>icons</strong> 文件夹中`;
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
