@@ -1,14 +1,4 @@
 {
-  "version": 2,
-  "buildCommand": null,
-  "framework": null,
-  "outputDirectory": ".",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/service-worker.js",
